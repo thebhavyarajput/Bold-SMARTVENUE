@@ -1,0 +1,231 @@
+
+<style>
+.phone-wrap{display:flex;justify-content:center;gap:24px;flex-wrap:wrap;padding:1.5rem 0}
+.phone{width:220px;background:#0f0f14;border-radius:32px;border:6px solid #1e1e28;overflow:hidden;font-family:var(--font-sans)}
+.phone-notch{width:80px;height:20px;background:#0f0f14;border-radius:0 0 14px 14px;margin:0 auto}
+.screen{background:#0f0f14;padding:0 0 16px;min-height:420px}
+.status-bar{display:flex;justify-content:space-between;align-items:center;padding:4px 14px 2px;font-size:10px;color:#aaa}
+.app-header{background:#1a1a24;padding:10px 14px 8px;border-bottom:0.5px solid #2a2a38}
+.app-header-title{font-size:13px;font-weight:500;color:#fff;margin:0}
+.app-header-sub{font-size:10px;color:#888;margin:2px 0 0}
+.hero-card{margin:10px;background:#1D9E75;border-radius:14px;padding:12px 14px}
+.hero-label{font-size:9px;color:#9FE1CB;font-weight:500;letter-spacing:0.05em;text-transform:uppercase}
+.hero-title{font-size:16px;font-weight:500;color:#fff;margin:2px 0}
+.hero-sub{font-size:10px;color:#9FE1CB;margin:0}
+.hero-live{display:inline-block;background:#085041;color:#9FE1CB;font-size:9px;padding:2px 7px;border-radius:4px;margin-top:6px;font-weight:500}
+.section-label{font-size:9px;color:#888;font-weight:500;letter-spacing:0.05em;text-transform:uppercase;padding:8px 14px 4px}
+.nav-row{display:flex;padding:0 10px;gap:6px;margin-bottom:8px}
+.nav-pill{flex:1;background:#1a1a24;border-radius:8px;padding:5px 4px;text-align:center;font-size:9px;color:#aaa;border:0.5px solid #2a2a38}
+.nav-pill.active{background:#534AB7;color:#CECBF6;border-color:#534AB7}
+.info-row{display:flex;gap:6px;padding:0 10px;margin-bottom:6px}
+.info-card{flex:1;background:#1a1a24;border-radius:10px;padding:8px 10px;border:0.5px solid #2a2a38}
+.info-val{font-size:14px;font-weight:500;color:#fff;margin:0}
+.info-lbl{font-size:9px;color:#888;margin:2px 0 0}
+.info-dot{width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:4px;vertical-align:middle}
+.list-item{display:flex;align-items:center;gap:8px;padding:7px 14px;border-bottom:0.5px solid #1e1e28}
+.list-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.list-title{font-size:11px;color:#fff;font-weight:500;margin:0}
+.list-sub{font-size:9px;color:#888;margin:2px 0 0}
+.list-badge{margin-left:auto;font-size:9px;padding:2px 7px;border-radius:4px;font-weight:500;flex-shrink:0}
+.badge-green{background:#085041;color:#5DCAA5}
+.badge-amber{background:#633806;color:#FAC775}
+.badge-red{background:#791F1F;color:#F09595}
+.order-card{margin:0 10px 8px;background:#1a1a24;border-radius:12px;padding:10px 12px;border:0.5px solid #2a2a38}
+.order-title{font-size:11px;font-weight:500;color:#fff;margin:0 0 6px}
+.order-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.order-item{font-size:10px;color:#aaa}
+.order-price{font-size:10px;color:#fff;font-weight:500}
+.order-divider{border:none;border-top:0.5px solid #2a2a38;margin:6px 0}
+.order-btn{width:100%;background:#534AB7;border:none;border-radius:8px;color:#CECBF6;font-size:11px;font-weight:500;padding:7px;cursor:pointer;margin-top:6px}
+.map-card{margin:0 10px 8px;background:#1a1a24;border-radius:12px;overflow:hidden;border:0.5px solid #2a2a38}
+.map-area{height:80px;background:#12121c;position:relative;display:flex;align-items:center;justify-content:center}
+.map-path{position:absolute;width:90%;height:2px;background:#534AB7;border-radius:1px;opacity:0.7}
+.map-dot{width:10px;height:10px;border-radius:50%;background:#1D9E75;border:2px solid #fff}
+.map-dot-end{width:10px;height:10px;border-radius:50%;background:#534AB7;border:2px solid #fff;position:absolute;right:14px}
+.map-foot{padding:7px 12px;display:flex;justify-content:space-between;align-items:center}
+.map-dir{font-size:10px;color:#fff;font-weight:500}
+.map-eta{font-size:9px;color:#888}
+.bottom-nav{display:flex;background:#13131c;border-top:0.5px solid #2a2a38;padding:6px 0 4px}
+.bnav-item{flex:1;text-align:center;font-size:8px;color:#666}
+.bnav-item.active{color:#7F77DD}
+.bnav-dot{width:16px;height:3px;background:#534AB7;border-radius:2px;margin:0 auto 3px}
+</style>
+
+<h2 class="sr-only">Fan-facing mobile app mockup for SmartVenue — three screens: live match dashboard, crowd navigation, and food ordering.</h2>
+
+<div class="phone-wrap">
+
+  <div>
+    <p style="text-align:center;font-size:12px;color:var(--color-text-secondary);margin:0 0 8px">Home — live match</p>
+    <div class="phone">
+      <div class="phone-notch"></div>
+      <div class="screen">
+        <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+        <div class="app-header">
+          <p class="app-header-title">SmartVenue</p>
+          <p class="app-header-sub">Section 14, Row C, Seat 22</p>
+        </div>
+        <div class="hero-card">
+          <p class="hero-label">Live now</p>
+          <p class="hero-title">Home 2 — 1 Away</p>
+          <p class="hero-sub">64' · Quarter 3</p>
+          <span class="hero-live">LIVE</span>
+        </div>
+        <div class="nav-row">
+          <div class="nav-pill active">Match</div>
+          <div class="nav-pill">Navigate</div>
+          <div class="nav-pill">Order</div>
+          <div class="nav-pill">Alerts</div>
+        </div>
+        <div class="section-label">Venue status</div>
+        <div class="info-row">
+          <div class="info-card">
+            <p class="info-val">12 min</p>
+            <p class="info-lbl">Gate C wait</p>
+          </div>
+          <div class="info-card">
+            <p class="info-val">3 min</p>
+            <p class="info-lbl">Stand B4 wait</p>
+          </div>
+          <div class="info-card">
+            <p class="info-val">82%</p>
+            <p class="info-lbl">Capacity</p>
+          </div>
+        </div>
+        <div class="section-label">Zone alerts</div>
+        <div class="list-item">
+          <div class="list-icon" style="background:#085041"><span style="font-size:13px;color:#5DCAA5">&#10003;</span></div>
+          <div><p class="list-title">North concourse</p><p class="list-sub">Clear — moving freely</p></div>
+          <span class="list-badge badge-green">Open</span>
+        </div>
+        <div class="list-item">
+          <div class="list-icon" style="background:#633806"><span style="font-size:13px;color:#FAC775">!</span></div>
+          <div><p class="list-title">East entry gate</p><p class="list-sub">Moderate congestion</p></div>
+          <span class="list-badge badge-amber">Busy</span>
+        </div>
+        <div class="list-item">
+          <div class="list-icon" style="background:#791F1F"><span style="font-size:13px;color:#F09595">&#9650;</span></div>
+          <div><p class="list-title">Food court row 3</p><p class="list-sub">High wait — 18 min</p></div>
+          <span class="list-badge badge-red">Avoid</span>
+        </div>
+        <div class="bottom-nav">
+          <div class="bnav-item active"><div class="bnav-dot"></div>Home</div>
+          <div class="bnav-item">Navigate</div>
+          <div class="bnav-item">Order</div>
+          <div class="bnav-item">Profile</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <p style="text-align:center;font-size:12px;color:var(--color-text-secondary);margin:0 0 8px">Navigate — wayfinding</p>
+    <div class="phone">
+      <div class="phone-notch"></div>
+      <div class="screen">
+        <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+        <div class="app-header">
+          <p class="app-header-title">Navigation</p>
+          <p class="app-header-sub">Indoor wayfinding — live</p>
+        </div>
+        <div class="map-card">
+          <div class="map-area">
+            <div class="map-path"></div>
+            <div class="map-dot"></div>
+            <div class="map-dot-end"></div>
+          </div>
+          <div class="map-foot">
+            <div>
+              <p class="map-dir">Head to Concourse B</p>
+              <p class="map-eta">Turn left at gate 7 · 3 min walk</p>
+            </div>
+            <div style="width:28px;height:28px;background:#534AB7;border-radius:8px;display:flex;align-items:center;justify-content:center">
+              <span style="color:#CECBF6;font-size:14px">&#9654;</span>
+            </div>
+          </div>
+        </div>
+        <div class="section-label">Nearby facilities</div>
+        <div class="list-item">
+          <div class="list-icon" style="background:#1a1a24;border:0.5px solid #2a2a38"><span style="font-size:13px">&#128703;</span></div>
+          <div><p class="list-title">Restrooms</p><p class="list-sub">Gate 6, left — 1 min</p></div>
+          <span class="list-badge badge-green">Free</span>
+        </div>
+        <div class="list-item">
+          <div class="list-icon" style="background:#1a1a24;border:0.5px solid #2a2a38"><span style="font-size:13px">&#127839;</span></div>
+          <div><p class="list-title">Stand B2 — pizza</p><p class="list-sub">2 min walk</p></div>
+          <span class="list-badge badge-green">3 min</span>
+        </div>
+        <div class="list-item">
+          <div class="list-icon" style="background:#1a1a24;border:0.5px solid #2a2a38"><span style="font-size:13px">&#9313;</span></div>
+          <div><p class="list-title">Exit gate B</p><p class="list-sub">Recommended post-match</p></div>
+          <span class="list-badge badge-green">Clear</span>
+        </div>
+        <div class="list-item">
+          <div class="list-icon" style="background:#1a1a24;border:0.5px solid #2a2a38"><span style="font-size:13px">&#9855;</span></div>
+          <div><p class="list-title">Accessible route</p><p class="list-sub">Elevator at block D</p></div>
+          <span class="list-badge badge-green">Open</span>
+        </div>
+        <div style="margin:10px;background:#534AB7;border-radius:10px;padding:8px 12px">
+          <p style="font-size:10px;color:#CECBF6;margin:0;font-weight:500">Post-match tip</p>
+          <p style="font-size:9px;color:#AFA9EC;margin:3px 0 0">Exit via Gate B to avoid 20-min queue at Gate A. Predicted clear in 8 min.</p>
+        </div>
+        <div class="bottom-nav">
+          <div class="bnav-item">Home</div>
+          <div class="bnav-item active"><div class="bnav-dot"></div>Navigate</div>
+          <div class="bnav-item">Order</div>
+          <div class="bnav-item">Profile</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <p style="text-align:center;font-size:12px;color:var(--color-text-secondary);margin:0 0 8px">Order — food & drinks</p>
+    <div class="phone">
+      <div class="phone-notch"></div>
+      <div class="screen">
+        <div class="status-bar"><span>9:41</span><span>●●●</span></div>
+        <div class="app-header">
+          <p class="app-header-title">Order food</p>
+          <p class="app-header-sub">Pickup or seat delivery</p>
+        </div>
+        <div style="padding:8px 10px 4px;display:flex;gap:6px">
+          <div style="flex:1;background:#534AB7;border-radius:8px;padding:5px 8px;text-align:center;font-size:9px;color:#CECBF6;font-weight:500">Pickup</div>
+          <div style="flex:1;background:#1a1a24;border-radius:8px;padding:5px 8px;text-align:center;font-size:9px;color:#888;border:0.5px solid #2a2a38">Seat delivery</div>
+        </div>
+        <div class="section-label">Recommended — low wait</div>
+        <div class="list-item">
+          <div class="list-icon" style="background:#1a1a24;border:0.5px solid #2a2a38"><span style="font-size:13px">&#127828;</span></div>
+          <div><p class="list-title">Stand B2 — Burger</p><p class="list-sub">Ready in 4 min · ₹180</p></div>
+          <span class="list-badge badge-green">Fast</span>
+        </div>
+        <div class="list-item">
+          <div class="list-icon" style="background:#1a1a24;border:0.5px solid #2a2a38"><span style="font-size:13px">&#127829;</span></div>
+          <div><p class="list-title">Stand C4 — Pizza</p><p class="list-sub">Ready in 6 min · ₹220</p></div>
+          <span class="list-badge badge-green">Fast</span>
+        </div>
+        <div class="list-item">
+          <div class="list-icon" style="background:#1a1a24;border:0.5px solid #2a2a38"><span style="font-size:13px">&#9749;</span></div>
+          <div><p class="list-title">Stand A1 — Tea/Coffee</p><p class="list-sub">Ready in 2 min · ₹60</p></div>
+          <span class="list-badge badge-amber">Busy</span>
+        </div>
+        <div class="section-label">Your cart</div>
+        <div class="order-card">
+          <p class="order-title">Current order</p>
+          <div class="order-row"><span class="order-item">1x Burger (Stand B2)</span><span class="order-price">₹180</span></div>
+          <div class="order-row"><span class="order-item">2x Tea (Stand A1)</span><span class="order-price">₹120</span></div>
+          <hr class="order-divider">
+          <div class="order-row"><span class="order-item" style="color:#fff;font-weight:500">Total</span><span class="order-price">₹300</span></div>
+          <button class="order-btn">Place order — pickup at halftime</button>
+        </div>
+        <div class="bottom-nav">
+          <div class="bnav-item">Home</div>
+          <div class="bnav-item">Navigate</div>
+          <div class="bnav-item active"><div class="bnav-dot"></div>Order</div>
+          <div class="bnav-item">Profile</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

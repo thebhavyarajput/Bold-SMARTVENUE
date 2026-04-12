@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="SmartVenue Command Center — Unified operational dashboard for crowd intelligence, staff coordination, predictive analytics, and real-time venue management.">
+  <title>SmartVenue — Command Center Hub</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+    :root {
+      --bg: #060D16;
+      --bg-panel: #0D1B2A;
+      --bg-card: #112240;
+      --bg-hover: #1B2A4A;
+      --accent: #00B4A6;
+      --accent-light: #00D4C4;
+      --accent-glow: rgba(0, 180, 166, 0.2);
+      --text: #E6F1FF;
+      --text-dim: #8892B0;
+      --text-faint: #5A6480;
+      --success: #00C853;
+      --warning: #FFB300;
+      --danger: #FF5252;
+      --info: #448AFF;
+      --border: rgba(100, 255, 218, 0.08);
+      --font: 'Inter', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 14px; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--bg-card); border-radius: 3px; }
+
+    /* --- Top Bar --- */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 24px;
+      background: var(--bg-panel);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(20px);
+    }
+
+    .topbar-left { display: flex; align-items: center; gap: 14px; }
+
+    .topbar-logo {
+      width: 40px; height: 40px;
+      background: linear-gradient(135deg, var(--accent), #009688);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
+
+    .topbar-title h1 {
+      font-size: 18px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #fff, var(--accent-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .topbar-title span { font-size: 11px; color: var(--text-dim); }
+
+    .topbar-right { display: flex; align-items: center; gap: 16px; }
+
+    .topbar-stat {
+      text-align: center;
+      padding: 4px 16px;
+      border-right: 1px solid var(--border);
+    }
+
+    .topbar-stat:last-child { border-right: none; }
+    .topbar-stat .val { font-size: 18px; font-weight: 700; color: var(--accent-light); }
+    .topbar-stat .lbl { font-size: 9px; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.05em; }
+
+    .live-indicator {
+      display: flex; align-items: center; gap: 8px;
+      padding: 6px 14px;
+      background: rgba(255, 82, 82, 0.15);
+      border: 1px solid rgba(255, 82, 82, 0.3);
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--danger);
+    }
+
+    .live-dot {
+      width: 8px; height: 8px;
+      background: var(--danger);
+      border-radius: 50%;
+      animation: blink 1.2s infinite;
+    }
+
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    /* --- Dashboard Grid --- */
+    .dashboard {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      grid-template-rows: auto;
+      gap: 14px;
+      padding: 16px 24px;
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+
+    .panel {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .panel:hover { border-color: rgba(100, 255, 218, 0.15); }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .panel-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .panel-title .icon {
+      width: 28px; height: 28px;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px;
+    }
+
+    .panel-badge {
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .panel-body { padding: 14px 16px; }
+
+    /* Span Classes */
+    .span-2 { grid-column: span 2; }
+    .span-full { grid-column: 1 / -1; }
+
+    /* --- Live Clock --- */
+    .topbar-clock {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      font-variant-numeric: tabular-nums;
+      padding: 0 12px;
+      border-right: 1px solid var(--border);
+    }
+
+    .topbar-timer {
+      font-size: 10px;
+      color: var(--text-faint);
+      text-align: center;
+    }
+
+    .topbar-timer .elapsed {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--accent-light);
+      display: block;
+    }
+
+    /* Fan App Link */
+    .fan-app-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--accent-light);
+      font-size: 12px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      font-family: var(--font);
+    }
+
+    .fan-app-link:hover {
+      background: var(--accent-glow);
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+
+    /* Real-time update flash */
+    @keyframes flashUpdate {
+      0% { box-shadow: 0 0 0 0 rgba(0, 180, 166, 0.4); }
+      70% { box-shadow: 0 0 0 8px rgba(0, 180, 166, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(0, 180, 166, 0); }
+    }
+
+    .flash { animation: flashUpdate 0.6s ease; }
+
+    /* --- Crowd Heatmap --- */
+    .heatmap-container { position: relative; }
+
+    .heatmap-grid {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      grid-template-rows: repeat(6, 1fr);
+      gap: 3px;
+      height: 200px;
+    }
+
+    .heat-cell {
+      border-radius: 4px;
+      transition: all 0.5s ease;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .heat-cell:hover {
+      transform: scale(1.05);
+      z-index: 2;
+      outline: 1px solid var(--accent);
+    }
+
+    .heat-cell .tooltip {
+      display: none;
+      position: absolute;
+      bottom: calc(100% + 4px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 10px;
+      white-space: nowrap;
+      z-index: 10;
+    }
+
+    .heat-cell:hover .tooltip { display: block; }
+
+    .heatmap-legend {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+      font-size: 10px;
+      color: var(--text-faint);
+    }
+
+    .heatmap-gradient {
+      width: 120px;
+      height: 8px;
+      border-radius: 4px;
+      background: linear-gradient(90deg, #00C853, #FFB300, #FF5252);
+    }
+
+    /* --- Stats Cards Row --- */
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+    }
+
+    .kpi-card {
+      background: var(--bg-card);
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+      border: 1px solid var(--border);
+      transition: all 0.3s ease;
+    }
+
+    .kpi-card:hover { border-color: var(--accent-glow); transform: translateY(-2px); }
+    .kpi-icon { font-size: 24px; margin-bottom: 8px; }
+
+    .kpi-value {
+      font-size: 24px;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent-light), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .kpi-label { font-size: 10px; color: var(--text-dim); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+
+    .kpi-trend {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      font-size: 10px;
+      margin-top: 6px;
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+
+    .kpi-trend.good { background: rgba(0,200,83,0.12); color: var(--success); }
+    .kpi-trend.bad { background: rgba(255,82,82,0.12); color: var(--danger); }
+
+    /* --- Wait Times --- */
+    .wait-list { display: flex; flex-direction: column; gap: 8px; }
+
+    .wait-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      background: var(--bg-card);
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    .wait-icon { font-size: 18px; }
+    .wait-info { flex: 1; }
+    .wait-name { font-size: 12px; font-weight: 600; }
+    .wait-detail { font-size: 10px; color: var(--text-dim); }
+
+    .wait-bar-bg {
+      width: 80px; height: 6px;
+      background: var(--bg-hover);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .wait-bar-fill { height: 100%; border-radius: 3px; transition: width 1s ease; }
+    .wait-time { font-size: 13px; font-weight: 700; min-width: 50px; text-align: right; }
+
+    /* --- Incident Feed --- */
+    .incident-feed { display: flex; flex-direction: column; gap: 8px; max-height: 280px; overflow-y: auto; }
+
+    .incident-item {
+      display: flex;
+      gap: 10px;
+      padding: 10px 12px;
+      background: var(--bg-card);
+      border-radius: 8px;
+      border-left: 3px solid transparent;
+      transition: all 0.3s ease;
+    }
+
+    .incident-item.critical { border-left-color: var(--danger); }
+    .incident-item.warning { border-left-color: var(--warning); }
+    .incident-item.info { border-left-color: var(--info); }
+    .incident-item.resolved { border-left-color: var(--success); opacity: 0.7; }
+
+    .incident-icon {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .incident-content { flex: 1; }
+    .incident-title { font-size: 12px; font-weight: 600; }
+    .incident-desc { font-size: 10px; color: var(--text-dim); margin-top: 2px; }
+    .incident-meta { font-size: 9px; color: var(--text-faint); margin-top: 4px; display: flex; gap: 10px; }
+
+    /* --- Staff Map --- */
+    .staff-map {
+      height: 200px;
+      background: var(--bg-card);
+      border-radius: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .staff-map svg { width: 100%; height: 100%; }
+
+    .staff-legend {
+      display: flex;
+      gap: 12px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    .staff-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 10px;
+      color: var(--text-dim);
+    }
+
+    .staff-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+    /* --- Gate Controls --- */
+    .gate-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+    .gate-card {
+      padding: 12px;
+      background: var(--bg-card);
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .gate-info { display: flex; align-items: center; gap: 8px; }
+    .gate-name { font-size: 12px; font-weight: 600; }
+    .gate-status { font-size: 10px; color: var(--text-dim); }
+
+    .gate-toggle {
+      width: 40px; height: 22px;
+      border-radius: 11px;
+      background: var(--bg-hover);
+      border: none;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .gate-toggle.active { background: var(--accent); }
+
+    .gate-toggle::after {
+      content: '';
+      position: absolute;
+      top: 3px; left: 3px;
+      width: 16px; height: 16px;
+      background: #fff;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+    }
+
+    .gate-toggle.active::after { left: 21px; }
+
+    /* --- Analytics Chart (CSS only) --- */
+    .chart-bars {
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+      height: 120px;
+      padding-top: 10px;
+    }
+
+    .chart-bar-group { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+
+    .chart-bar {
+      width: 100%;
+      min-height: 4px;
+      border-radius: 4px 4px 0 0;
+      transition: height 1s ease;
+      position: relative;
+    }
+
+    .chart-bar:hover { filter: brightness(1.3); }
+
+    .chart-bar-label { font-size: 9px; color: var(--text-faint); }
+
+    .chart-legend {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 12px;
+      font-size: 10px;
+      color: var(--text-dim);
+    }
+
+    .chart-legend-dot {
+      width: 8px; height: 8px;
+      border-radius: 2px;
+      display: inline-block;
+      margin-right: 4px;
+    }
+
+    /* --- Subsystem Status --- */
+    .subsystem-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+
+    .subsystem-card {
+      padding: 14px 10px;
+      background: var(--bg-card);
+      border-radius: 8px;
+      text-align: center;
+      border: 1px solid var(--border);
+      transition: all 0.3s ease;
+    }
+
+    .subsystem-card:hover { border-color: var(--accent-glow); }
+    .subsystem-icon { font-size: 24px; margin-bottom: 6px; }
+    .subsystem-name { font-size: 11px; font-weight: 600; }
+    .subsystem-status { font-size: 9px; margin-top: 4px; }
+    .subsystem-status.online { color: var(--success); }
+    .subsystem-status.degraded { color: var(--warning); }
+
+    /* --- Responsive --- */
+    @media (max-width: 1200px) {
+      .kpi-row { grid-template-columns: repeat(3, 1fr); }
+      .subsystem-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    @media (max-width: 768px) {
+      .dashboard { grid-template-columns: 1fr; padding: 12px; }
+      .span-2, .span-full { grid-column: span 1; }
+      .kpi-row { grid-template-columns: repeat(2, 1fr); }
+      .subsystem-grid { grid-template-columns: repeat(2, 1fr); }
+      .topbar-stat, .topbar-clock, .topbar-timer { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Top Bar -->
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="topbar-logo">🎯</div>
+    <div class="topbar-title">
+      <h1>Command Center Hub</h1>
+      <span>Wankhede Stadium — IPL 2026</span>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div class="topbar-clock" id="cc-clock">17:50</div>
+    <div class="topbar-timer">
+      <span class="elapsed" id="cc-elapsed">01:42:15</span>
+      Ops Elapsed
+    </div>
+    <div class="topbar-stat">
+      <div class="val" id="cc-capacity">78%</div>
+      <div class="lbl">Capacity</div>
+    </div>
+    <div class="topbar-stat">
+      <div class="val" id="cc-fans">34,200</div>
+      <div class="lbl">Active Fans</div>
+    </div>
+    <div class="topbar-stat">
+      <div class="val" id="cc-incidents-count">3</div>
+      <div class="lbl">Active Incidents</div>
+    </div>
+    <div class="topbar-stat">
+      <div class="val" id="cc-staff">142</div>
+      <div class="lbl">Staff Deployed</div>
+    </div>
+    <a href="index.html" class="fan-app-link">📱 Fan App</a>
+    <div class="live-indicator">
+      <span class="live-dot"></span>
+      LIVE OPS
+    </div>
+  </div>
+</div>
+
+<div class="dashboard">
+
+  <!-- Subsystem Status Row -->
+  <div class="panel span-full">
+    <div class="panel-header">
+      <span class="panel-title"><span class="icon" style="background:rgba(0,180,166,0.15)">⚙️</span> Subsystem Status</span>
+      <span class="panel-badge" style="background:rgba(0,200,83,0.12);color:#00C853;">All Systems Operational</span>
+    </div>
+    <div class="panel-body">
+      <div class="subsystem-grid">
+        <div class="subsystem-card">
+          <div class="subsystem-icon">📡</div>
+          <div class="subsystem-name">Crowd Intelligence</div>
+          <div class="subsystem-status online">● Online — 48 sensors</div>
+        </div>
+        <div class="subsystem-card">
+          <div class="subsystem-icon">⏱️</div>
+          <div class="subsystem-name">Wait Time Reduction</div>
+          <div class="subsystem-status online">● Online — 12 stands</div>
+        </div>
+        <div class="subsystem-card">
+          <div class="subsystem-icon">📱</div>
+          <div class="subsystem-name">Fan Mobile App</div>
+          <div class="subsystem-status online">● Online — 18.2k users</div>
+        </div>
+        <div class="subsystem-card">
+          <div class="subsystem-icon">👮</div>
+          <div class="subsystem-name">Staff Coordination</div>
+          <div class="subsystem-status online">● Online — 142 active</div>
+        </div>
+        <div class="subsystem-card">
+          <div class="subsystem-icon">🧠</div>
+          <div class="subsystem-name">Predictive Analytics</div>
+          <div class="subsystem-status degraded">◐ Processing — 94% accuracy</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KPI Row -->
+  <div class="panel span-full">
+    <div class="panel-body">
+      <div class="kpi-row">
+        <div class="kpi-card">
+          <div class="kpi-icon">🚪</div>
+          <div class="kpi-value">92%</div>
+          <div class="kpi-label">Entry Bottleneck Reduction</div>
+          <span class="kpi-trend good">↑ Target Hit</span>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon">⏱️</div>
+          <div class="kpi-value">85%</div>
+          <div class="kpi-label">Wait Time Reduction</div>
+          <span class="kpi-trend good">↑ +12% today</span>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon">🛡️</div>
+          <div class="kpi-value">88%</div>
+          <div class="kpi-label">Crowd Flow Safety</div>
+          <span class="kpi-trend good">↑ Excellent</span>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon">🧭</div>
+          <div class="kpi-value">&lt;3m</div>
+          <div class="kpi-label">Avg Navigation Time</div>
+          <span class="kpi-trend good">↓ -45s vs avg</span>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-icon">📦</div>
+          <div class="kpi-value">2,841</div>
+          <div class="kpi-label">Orders Processed</div>
+          <span class="kpi-trend good">↑ +340 this hour</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Crowd Intelligence Heatmap -->
+  <div class="panel span-2">
+    <div class="panel-header">
+      <span class="panel-title"><span class="icon" style="background:rgba(68,138,255,0.15)">📡</span> Crowd Intelligence — Live Heatmap</span>
+      <span class="panel-badge" style="background:rgba(255,179,0,0.12);color:#FFB300;">2 Hotspots</span>
+    </div>
+    <div class="panel-body">
+      <div class="heatmap-container">
+        <div class="heatmap-grid" id="cc-heatmap"></div>
+        <div class="heatmap-legend">
+          <span>Low density</span>
+          <div class="heatmap-gradient"></div>
+          <span>High density</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Wait Time Monitor -->
+  <div class="panel span-2">
+    <div class="panel-header">
+      <span class="panel-title"><span class="icon" style="background:rgba(255,179,0,0.15)">⏱️</span> Concession Wait Times</span>
+      <span class="panel-badge" style="background:rgba(0,200,83,0.12);color:#00C853;">Updated 10s ago</span>
+    </div>
+    <div class="panel-body">
+      <div class="wait-list" id="cc-wait-list">
+        <!-- JS populated -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Incident Feed -->
+  <div class="panel span-2">
+    <div class="panel-header">
+      <span class="panel-title"><span class="icon" style="background:rgba(255,82,82,0.15)">🚨</span> Incident Management</span>
+      <span class="panel-badge" style="background:rgba(255,82,82,0.12);color:#FF5252;">3 Active</span>
+    </div>
+    <div class="panel-body">
+      <div class="incident-feed" id="cc-incidents">
+        <!-- JS populated -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Staff Deployment -->
+  <div class="panel span-2">
+    <div class="panel-header">
+      <span class="panel-title"><span class="icon" style="background:rgba(0,200,83,0.15)">👮</span> Staff Deployment Map</span>
+      <span class="panel-badge" style="background:rgba(0,180,166,0.12);color:#00B4A6;">142 Active</span>
+    </div>
+    <div class="panel-body">
+      <div class="staff-map" id="cc-staff-map">
+        <svg id="staff-svg" viewBox="0 0 400 200"></svg>
+      </div>
+      <div class="staff-legend">
+        <div class="staff-legend-item"><div class="staff-dot" style="background:#448AFF"></div> Security (58)</div>
+        <div class="staff-legend-item"><div class="staff-dot" style="background:#00C853"></div> Ushers (42)</div>
+        <div class="staff-legend-item"><div class="staff-dot" style="background:#FF5252"></div> Medical (12)</div>
+        <div class="staff-legend-item"><div class="staff-dot" style="background:#FFB300"></div> Concessions (30)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gate Control -->
+  <div class="panel span-2">
+    <div class="panel-header">
+      <span class="panel-title"><span class="icon" style="background:rgba(0,180,166,0.15)">🚪</span> Gate Control</span>
+    </div>
+    <div class="panel-body">
+      <div class="gate-grid" id="cc-gates"></div>
+    </div>
+  </div>
+
+  <!-- Predictive Analytics -->
+  <div class="panel span-2">
+    <div class="panel-header">
+      <span class="panel-title"><span class="icon" style="background:rgba(156,39,176,0.15)">🧠</span> Predictive Analytics — Demand Forecast</span>
+    </div>
+    <div class="panel-body">
+      <div class="chart-bars" id="cc-chart"></div>
+      <div class="chart-legend">
+        <span><span class="chart-legend-dot" style="background:var(--accent)"></span> Predicted</span>
+        <span><span class="chart-legend-dot" style="background:var(--info)"></span> Actual</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// --- Command Center Data Engine ---
+
+// Heatmap
+function renderHeatmap() {
+  const grid = document.getElementById('cc-heatmap');
+  if (!grid) return;
+  grid.innerHTML = '';
+  const zones = ['Gate A','North','North','Concourse','Concourse','East','East','Gate B',
+    'West','N-Stand','N-Stand','Food Ct','Food Ct','E-Stand','E-Stand','East',
+    'West','N-Stand','N-Stand','Pitch','Pitch','E-Stand','E-Stand','East',
+    'West','S-Stand','S-Stand','Pitch','Pitch','S-Stand','S-Stand','East',
+    'West','S-Stand','S-Stand','Food Ct','Food Ct','S-Stand','S-Stand','East',
+    'Gate C','South','South','Concourse','Concourse','South','South','Gate D'];
+
+  zones.forEach((z, i) => {
+    const heat = Math.random();
+    const cell = document.createElement('div');
+    cell.className = 'heat-cell';
+    let clr;
+    if (z === 'Pitch') clr = 'rgba(100, 255, 218, 0.08)';
+    else if (heat < 0.3) clr = 'rgba(0, 200, 83, 0.25)';
+    else if (heat < 0.6) clr = 'rgba(255, 179, 0, 0.3)';
+    else if (heat < 0.8) clr = 'rgba(255, 140, 0, 0.4)';
+    else clr = 'rgba(255, 82, 82, 0.45)';
+    cell.style.background = clr;
+    cell.innerHTML = `<span class="tooltip">${z}: ${Math.round(heat * 100)}%</span>`;
+    grid.appendChild(cell);
+  });
+}
+
+// Wait Times
+function renderWaitTimes() {
+  const stands = [
+    { name: 'Stand A1 — Tea & Coffee', icon: '☕', wait: 2, max: 15, staff: 4 },
+    { name: 'Stand B2 — Burgers', icon: '🍔', wait: 4, max: 15, staff: 6 },
+    { name: 'Stand C4 — Pizza', icon: '🍕', wait: 6, max: 15, staff: 5 },
+    { name: 'Stand D3 — Snacks', icon: '🥟', wait: 3, max: 15, staff: 3 },
+    { name: 'Stand E1 — Desserts', icon: '🍦', wait: 2, max: 15, staff: 2 },
+    { name: 'Stand F2 — Beverages', icon: '🥤', wait: 8, max: 15, staff: 4 }
+  ];
+
+  const el = document.getElementById('cc-wait-list');
+  el.innerHTML = stands.map(s => {
+    const pct = (s.wait / s.max) * 100;
+    const clr = pct < 30 ? 'var(--success)' : pct < 60 ? 'var(--warning)' : 'var(--danger)';
+    return `
+      <div class="wait-item">
+        <span class="wait-icon">${s.icon}</span>
+        <div class="wait-info">
+          <div class="wait-name">${s.name}</div>
+          <div class="wait-detail">${s.staff} staff • Cashless ready</div>
+        </div>
+        <div class="wait-bar-bg"><div class="wait-bar-fill" style="width:${pct}%;background:${clr}"></div></div>
+        <span class="wait-time" style="color:${clr}">${s.wait} min</span>
+      </div>
+    `;
+  }).join('');
+}
+
+// Incidents
+function renderIncidents() {
+  const incidents = [
+    { type: 'critical', icon: '🚨', bg: 'rgba(255,82,82,0.15)', title: 'Gate D — Crowd Density Alert', desc: 'Density at 92%. Auto-rerouting fans via Gate F. 2 security deployed.', time: '2 min ago', responder: 'Unit S-14, S-22' },
+    { type: 'warning', icon: '⚠️', bg: 'rgba(255,179,0,0.15)', title: 'Stand F2 — Staff Shortage', desc: 'Queue exceeding 8 min. Requesting 2 additional staff from Stand E1.', time: '5 min ago', responder: 'Ops Manager' },
+    { type: 'info', icon: 'ℹ️', bg: 'rgba(68,138,255,0.15)', title: 'Medical — Minor First Aid', desc: 'Section 22, Row F. Minor injury attended. No escalation needed.', time: '8 min ago', responder: 'Med Unit M-3' },
+    { type: 'resolved', icon: '✅', bg: 'rgba(0,200,83,0.15)', title: 'North Concourse — Cleared', desc: 'Bottleneck resolved after temporary gate adjustment. Flow normal.', time: '15 min ago', responder: 'Auto-resolved' },
+    { type: 'warning', icon: '⚠️', bg: 'rgba(255,179,0,0.15)', title: 'Parking Lot P2 — 95% Full', desc: 'Redirecting incoming vehicles to P3 and P5. Signage updated.', time: '18 min ago', responder: 'Parking Ops' }
+  ];
+
+  const el = document.getElementById('cc-incidents');
+  el.innerHTML = incidents.map(inc => `
+    <div class="incident-item ${inc.type}">
+      <div class="incident-icon" style="background:${inc.bg}">${inc.icon}</div>
+      <div class="incident-content">
+        <div class="incident-title">${inc.title}</div>
+        <div class="incident-desc">${inc.desc}</div>
+        <div class="incident-meta">
+          <span>🕐 ${inc.time}</span>
+          <span>👤 ${inc.responder}</span>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// Staff Map (SVG)
+function renderStaffMap() {
+  const svg = document.getElementById('staff-svg');
+  if (!svg) return;
+
+  let content = `
+    <rect x="10" y="10" width="380" height="180" rx="8" fill="rgba(17,34,64,0.5)" stroke="rgba(100,255,218,0.1)" stroke-width="0.5"/>
+    <ellipse cx="200" cy="100" rx="100" ry="60" fill="none" stroke="rgba(100,255,218,0.1)" stroke-width="0.5"/>
+    <ellipse cx="200" cy="100" rx="60" ry="35" fill="rgba(100,255,218,0.03)" stroke="rgba(100,255,218,0.08)" stroke-width="0.5"/>
+    <text x="200" y="103" text-anchor="middle" fill="rgba(100,255,218,0.2)" font-size="10" font-family="Inter">PITCH</text>
+  `;
+
+  const staffTypes = [
+    { color: '#448AFF', count: 20 },
+    { color: '#00C853', count: 15 },
+    { color: '#FF5252', count: 5 },
+    { color: '#FFB300', count: 12 }
+  ];
+
+  staffTypes.forEach(type => {
+    for (let i = 0; i < type.count; i++) {
+      const x = 30 + Math.random() * 340;
+      const y = 25 + Math.random() * 150;
+      const dist = Math.sqrt((x - 200) ** 2 / 10000 + (y - 100) ** 2 / 3600);
+      if (dist < 0.55) continue;
+      content += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3" fill="${type.color}" opacity="0.8">
+        <animate attributeName="opacity" values="0.6;1;0.6" dur="${2 + Math.random() * 3}s" repeatCount="indefinite"/>
+      </circle>`;
+    }
+  });
+
+  svg.innerHTML = content;
+}
+
+// Gate Controls
+function renderGates() {
+  const gates = [
+    { name: 'Gate A', status: 'Open — 320/min', open: true },
+    { name: 'Gate B', status: 'Open — 280/min', open: true },
+    { name: 'Gate C', status: 'Open — 450/min', open: true },
+    { name: 'Gate D', status: 'Restricted — Rerouting', open: false },
+    { name: 'Gate E', status: 'Open — 200/min', open: true },
+    { name: 'Gate F', status: 'Open — 380/min', open: true }
+  ];
+
+  const el = document.getElementById('cc-gates');
+  el.innerHTML = gates.map((g, i) => `
+    <div class="gate-card">
+      <div class="gate-info">
+        <span style="font-size:18px">🚪</span>
+        <div>
+          <div class="gate-name">${g.name}</div>
+          <div class="gate-status">${g.status}</div>
+        </div>
+      </div>
+      <button class="gate-toggle ${g.open ? 'active' : ''}" onclick="this.classList.toggle('active')" aria-label="Toggle ${g.name}"></button>
+    </div>
+  `).join('');
+}
+
+// Predictive Chart
+function renderChart() {
+  const data = [
+    { label: '17:00', pred: 60, actual: 55 },
+    { label: '17:30', pred: 75, actual: 72 },
+    { label: '18:00', pred: 90, actual: 88 },
+    { label: '18:30', pred: 85, actual: 0 },
+    { label: '19:00', pred: 70, actual: 0 },
+    { label: '19:30', pred: 45, actual: 0 },
+    { label: '20:00', pred: 95, actual: 0 },
+    { label: '20:30', pred: 60, actual: 0 }
+  ];
+
+  const el = document.getElementById('cc-chart');
+  el.innerHTML = data.map(d => {
+    const predH = d.pred * 1.1;
+    const actH = d.actual * 1.1;
+    return `
+      <div class="chart-bar-group">
+        <div style="display:flex;gap:2px;align-items:flex-end;height:100%;width:100%">
+          <div class="chart-bar" style="height:${predH}px;background:var(--accent);flex:1;opacity:0.6"></div>
+          ${d.actual > 0 ? `<div class="chart-bar" style="height:${actH}px;background:var(--info);flex:1"></div>` : ''}
+        </div>
+        <div class="chart-bar-label">${d.label}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+// --- Live Clock & Timer ---
+let opsStartTime = new Date(Date.now() - 6135000); // started ~1h42m ago
+
+function updateClock() {
+  const now = new Date();
+  const clockEl = document.getElementById('cc-clock');
+  if (clockEl) clockEl.textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+  
+  const elapsed = Math.floor((now - opsStartTime) / 1000);
+  const h = String(Math.floor(elapsed / 3600)).padStart(2, '0');
+  const m = String(Math.floor((elapsed % 3600) / 60)).padStart(2, '0');
+  const s = String(elapsed % 60).padStart(2, '0');
+  const elapsedEl = document.getElementById('cc-elapsed');
+  if (elapsedEl) elapsedEl.textContent = `${h}:${m}:${s}`;
+}
+
+// --- Simulated KPI Updates ---
+let ccCapacity = 78;
+let ccFans = 34200;
+let ccOrders = 2841;
+
+function simulateUpdates() {
+  // Capacity fluctuation
+  ccCapacity = Math.min(100, Math.max(60, ccCapacity + Math.floor((Math.random() - 0.45) * 3)));
+  const capEl = document.getElementById('cc-capacity');
+  if (capEl) { capEl.textContent = ccCapacity + '%'; capEl.parentElement.classList.add('flash'); setTimeout(() => capEl.parentElement.classList.remove('flash'), 600); }
+
+  // Fan count fluctuation
+  ccFans = Math.min(44000, Math.max(30000, ccFans + Math.floor((Math.random() - 0.4) * 200)));
+  const fanEl = document.getElementById('cc-fans');
+  if (fanEl) fanEl.textContent = ccFans.toLocaleString();
+
+  // Orders
+  ccOrders += Math.floor(Math.random() * 15) + 3;
+  const kpiCards = document.querySelectorAll('.kpi-value');
+  if (kpiCards.length >= 5) kpiCards[4].textContent = ccOrders.toLocaleString();
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+  renderHeatmap();
+  renderWaitTimes();
+  renderIncidents();
+  renderStaffMap();
+  renderGates();
+  renderChart();
+  updateClock();
+
+  // Live clock every second
+  setInterval(updateClock, 1000);
+
+  // Heatmap refresh every 10s
+  setInterval(renderHeatmap, 10000);
+
+  // KPI refresh every 8s
+  setInterval(simulateUpdates, 8000);
+
+  // Wait times refresh every 15s
+  setInterval(renderWaitTimes, 15000);
+
+  // Staff map refresh every 20s
+  setInterval(renderStaffMap, 20000);
+});
+</script>
+</body>
+</html>
