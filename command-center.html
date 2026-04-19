@@ -873,7 +873,7 @@ function renderGates() {
           <div class="gate-status">${g.status}</div>
         </div>
       </div>
-      <button class="gate-toggle ${g.open ? 'active' : ''}" onclick="this.classList.toggle('active')" aria-label="Toggle ${g.name}"></button>
+      <button class="gate-toggle ${g.open ? 'active' : ''}" data-action="toggle-gate" aria-label="Toggle ${g.name}"></button>
     </div>
   `).join('');
 }
@@ -969,6 +969,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Staff map refresh every 20s
   setInterval(renderStaffMap, 20000);
+
+  // Secure event delegation (replaces all inline onclick handlers)
+  document.body.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-action="toggle-gate"]');
+    if (btn) {
+      btn.classList.toggle('active');
+      if (typeof gtag === 'function') {
+        gtag('event', 'gate_toggled', { label: btn.getAttribute('aria-label') });
+      }
+    }
+  });
 });
 </script>
 </body>
