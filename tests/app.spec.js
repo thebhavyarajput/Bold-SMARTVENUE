@@ -1,6 +1,6 @@
 // --- Testing Suite (Evaluation Hook) ---
 // Validating core logic paths for SmartVenue
-
+"use strict";
 console.log("🧪 Running SmartVenue Test Suite...");
 
 // Mock state assertions

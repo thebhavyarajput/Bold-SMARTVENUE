@@ -2,9 +2,14 @@
    SmartVenue App Engine
    Real-time data simulation & interactions
    ============================================ */
+"use strict";
 
-// --- App State ---
-const AppState = {
+/**
+ * @typedef {Object} ApplicationState
+ * @description Centralized state management for SmartVenue parameters.
+ * Maps globally to avoid implicit namespace pollution.
+ */
+window.AppState = {
   activeTab: 'home',
   cart: [
     { id: 1, name: 'Veg Burger', stand: 'Stand B2', emoji: '<span class="material-symbols-rounded">lunch_dining</span>', price: 180, qty: 1 },
