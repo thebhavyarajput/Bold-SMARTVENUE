@@ -681,6 +681,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (action === 'add-cart') addToCart(id);
     else if (action === 'cart-qty') updateCartQty(id, parseInt(btn.dataset.change, 10));
     else if (action === 'checkout') placeOrder();
+    else if (action === 'open-ride-modal') {
+      if (typeof RideBookingUI !== 'undefined') {
+        // Wankhede Stadium coordinates — swap with dynamic coords from your event data
+        RideBookingUI.open(18.9387, 72.8257);
+      }
+    }
   });
 
 });

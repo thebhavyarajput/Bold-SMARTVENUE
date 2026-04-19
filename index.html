@@ -284,6 +284,18 @@
           </div>
           <span class="facility-wait zone-badge clear">Open</span>
         </div>
+
+        <!-- ── Ride Booking Trigger ─────────────────── -->
+        <button class="ride-trigger-btn" id="btn-book-ride"
+                aria-label="Book a cab ride from Wankhede Stadium"
+                data-action="open-ride-modal">
+          <div class="rtb-icon">🚖</div>
+          <div>
+            <div>Book a Ride</div>
+            <div style="font-size:11px;font-weight:400;color:#5A6480;margin-top:2px">Uber • Rapido • Ola — from Gate B</div>
+          </div>
+          <span class="rtb-arrow material-symbols-rounded">chevron_right</span>
+        </button>
         <div class="facility-item">
           <div class="facility-icon"><span class="material-symbols-rounded">local_hospital</span></div>
           <div class="facility-info">
@@ -490,6 +502,7 @@
 
 <script defer src="app.js"></script>
 <script defer src="assistant.js"></script>
+<script defer src="ride-booking.js"></script>
 <script>
   // Hide splash after loading
   window.addEventListener('load', () => {
