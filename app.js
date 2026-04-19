@@ -666,7 +666,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Bind generic section action buttons (Refresh, View All, Full Screen)
   document.querySelectorAll('.section-action').forEach(btn => {
-    if (!btn.id) { // Avoid binding special ones like mark-alerts-read
+    if (!btn.id) {
       btn.addEventListener('click', (e) => {
         const text = e.target.textContent || '';
         if (text.includes('Refresh')) {
@@ -678,7 +678,15 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
   });
-  });
+
+  // Translate button — shows Google Translate widget
+  const btnTranslate = document.getElementById('btn-translate');
+  if (btnTranslate) {
+    btnTranslate.addEventListener('click', () => {
+      const el = document.getElementById('google_translate_element');
+      if (el) el.style.display = el.style.display === 'none' ? 'block' : 'none';
+    });
+  }
 
   // Secure Event Delegation for Menu/Cart (replaces inline onclick)
   document.body.addEventListener('click', (e) => {
