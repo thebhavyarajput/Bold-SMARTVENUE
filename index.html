@@ -503,24 +503,34 @@
 <script defer src="app.js"></script>
 <script defer src="assistant.js"></script>
 <script defer src="ride-booking.js"></script>
-<script>
-  // Hide splash after loading
+<script defer src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+<script defer>
+  // Google Translate Callback
+  function googleTranslateElementInit() {
+    if (typeof google !== 'undefined' && google.translate) {
+      new google.translate.TranslateElement(
+        { pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE },
+        'google_translate_element'
+      );
+    }
+  }
+
+  // Hide splash screen — always runs regardless of other script errors
   window.addEventListener('load', () => {
+    const splash = document.getElementById('splash');
+
+    // Step 1: Hide splash after 2s
     setTimeout(() => {
-      document.getElementById('splash').classList.add('hidden');
+      if (splash) splash.classList.add('hidden');
     }, 2000);
 
-    // Initialize VenueIQ after splash
+    // Step 2: Init VenueIQ after splash (with safety guard)
     setTimeout(() => {
-      VenueIQ.init();
+      if (typeof window.VenueIQ !== 'undefined' && typeof window.VenueIQ.init === 'function') {
+        window.VenueIQ.init();
+      }
     }, 2500);
   });
-
-  // Google Translate Core Init
-  function googleTranslateElementInit() {
-    new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
-  }
 </script>
-<script defer src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
