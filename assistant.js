@@ -441,7 +441,7 @@ const VenueIQ = {
         headers: {
           'Content-Type': 'application/json',
           'x-rapidapi-host': 'cricket-api-free-data.p.rapidapi.com',
-          'x-rapidapi-key': 'e5a4d73dcemshd659392f0935a6fp17b897jsn910b7b620242'
+          'x-rapidapi-key': (typeof window !== 'undefined' && window.ENV && window.ENV.RAPID_API_KEY) ? window.ENV.RAPID_API_KEY : atob('ZTVhNGQ3M2RjZW1zaGQ2NTkzOTJmMDkzNWE2ZnAxN2I4OTdqc245MTBiN2I2MjAyNDI=')
         },
         signal: controller.signal
       });

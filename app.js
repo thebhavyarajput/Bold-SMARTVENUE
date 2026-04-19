@@ -241,7 +241,7 @@ function renderMenu() {
         <div class="menu-item-stand">${item.stand}</div>
         <div class="menu-item-footer">
           <span class="menu-item-price">₹${item.price}</span>
-          <button class="menu-add-btn" onclick="addToCart(${item.id})" aria-label="Add ${item.name}">+</button>
+          <button class="menu-add-btn" data-action="add-cart" data-id="${item.id}" aria-label="Add ${item.name}">+</button>
         </div>
       </div>
     </div>
@@ -281,9 +281,9 @@ function renderCart() {
             </div>
           </div>
           <div class="cart-item-controls">
-            <button class="cart-qty-btn" onclick="updateCartQty(${item.id}, -1)">−</button>
+            <button class="cart-qty-btn" data-action="cart-qty" data-id="${item.id}" data-change="-1">−</button>
             <span class="cart-qty">${item.qty}</span>
-            <button class="cart-qty-btn" onclick="updateCartQty(${item.id}, 1)">+</button>
+            <button class="cart-qty-btn" data-action="cart-qty" data-id="${item.id}" data-change="1">+</button>
             <span class="cart-item-price">₹${item.price * item.qty}</span>
           </div>
         </div>
@@ -298,7 +298,7 @@ function renderCart() {
         <span class="cart-total-label">Total</span>
         <span class="cart-total-value">₹${total}</span>
       </div>
-      <button class="cart-checkout-btn" onclick="placeOrder()" id="checkout-btn">
+      <button class="cart-checkout-btn" data-action="checkout" id="checkout-btn">
         Place Order — Pickup at Halftime
       </button>
     </div>
@@ -645,6 +645,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
     }
+  });
+  });
+
+  // Secure Event Delegation for Menu/Cart (replaces inline onclick)
+  document.body.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-action]');
+    if (!btn) return;
+    
+    const action = btn.dataset.action;
+    const id = parseInt(btn.dataset.id, 10);
+    
+    if (action === 'add-cart') addToCart(id);
+    else if (action === 'cart-qty') updateCartQty(id, parseInt(btn.dataset.change, 10));
+    else if (action === 'checkout') placeOrder();
   });
 
 });

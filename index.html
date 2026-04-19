@@ -6,6 +6,7 @@
   <meta name="description" content="SmartVenue — Your smart companion for the ultimate stadium experience. Live scores, indoor navigation, food ordering, and real-time crowd alerts.">
   <meta name="theme-color" content="#0D1B2A">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' https: data:;">
   <title>SmartVenue — Fan App</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -135,7 +136,7 @@
     <div id="google_translate_element" style="display:none;"></div>
     
     <div class="header-actions">
-      <button class="header-btn" aria-label="Translate" id="btn-translate" onclick="document.getElementById('google_translate_element').style.display='block';"><span class="material-symbols-rounded">translate</span></button>
+      <button class="header-btn" aria-label="Translate" id="btn-translate"><span class="material-symbols-rounded">translate</span></button>
       <button class="header-btn" aria-label="Search" id="btn-search"><span class="material-symbols-rounded">search</span></button>
       <button class="header-btn" aria-label="Notifications" id="btn-notif">
         <span class="material-symbols-rounded">notifications</span>
