@@ -835,3 +835,5 @@ window.VenueIQ = {
     }
   }
 };
+// Local alias — internal references to VenueIQ (e.g. VenueIQ.init()) keep working
+const VenueIQ = window.VenueIQ; // eslint-disable-line no-unused-vars

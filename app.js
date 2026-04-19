@@ -80,6 +80,8 @@ window.AppState = {
   orderMode: 'pickup',
   activeIntervals: []
 };
+// Local alias — all existing code references AppState directly
+const AppState = window.AppState; // eslint-disable-line no-unused-vars
 
 // --- Alert Data ---
 const alertTemplates = [
