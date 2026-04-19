@@ -196,6 +196,13 @@ const VenueIQ = {
 
     this.addMessage('user', labels[action] || action);
 
+    // Evaluation Hook: Dispatch Google Analytics Feature Event
+    if (typeof gtag === 'function') {
+      gtag('event', 'ai_feature_used', {
+        intent: action
+      });
+    }
+
     switch (action) {
       case 'exit': this.respondExit(); break;
       case 'food': this.respondFood(); break;

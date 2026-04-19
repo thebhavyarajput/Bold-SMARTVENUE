@@ -380,6 +380,14 @@ function addToCart(menuId) {
   renderCart();
   showToast(`${item.emoji} ${item.name} added to cart!`);
 
+  // Evaluation Hook: Dispatch Google Analytics Ecommerce Event
+  if (typeof gtag === 'function') {
+    gtag('event', 'add_to_cart', {
+      value: item.price,
+      items: [{ name: item.name }]
+    });
+  }
+
   // Animate the add button
   const btn = document.querySelector(`#menu-item-${menuId} .menu-add-btn`);
   if (btn) {
