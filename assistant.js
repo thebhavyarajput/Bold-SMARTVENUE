@@ -426,14 +426,19 @@ const VenueIQ = {
 
     // Connect to RapidAPI for Score Prediction
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 6000); // 6s timeout
+
       const apiResp = await fetch('https://cricket-api-free-data.p.rapidapi.com/cricket-players?teamid=2', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
           'x-rapidapi-host': 'cricket-api-free-data.p.rapidapi.com',
           'x-rapidapi-key': 'e5a4d73dcemshd659392f0935a6fp17b897jsn910b7b620242'
-        }
+        },
+        signal: controller.signal
       });
+      clearTimeout(timeoutId);
       const data = await apiResp.json();
       
       if (data && data.response && data.response.length > 0) {

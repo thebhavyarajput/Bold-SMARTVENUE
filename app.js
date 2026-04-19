@@ -47,7 +47,8 @@ const AppState = {
     { id: 110, name: 'Biryani Bowl', stand: 'Stand C4', emoji: '<span class="material-symbols-rounded">set_meal</span>', price: 280, wait: 8, cat: 'food', waitStatus: 'avoid' }
   ],
   activeMenuCat: 'all',
-  orderMode: 'pickup'
+  orderMode: 'pickup',
+  activeIntervals: []
 };
 
 // --- Alert Data ---
@@ -479,17 +480,24 @@ function updateClock() {
 
 // --- Real-time Simulation ---
 function startSimulation() {
+  if (AppState.activeIntervals) {
+    AppState.activeIntervals.forEach(clearInterval);
+  }
+  AppState.activeIntervals = [];
+
   // Update countdown every second
-  setInterval(() => {
+  const cntInt = setInterval(() => {
     if (AppState.halftimeCountdown > 0) {
       AppState.halftimeCountdown--;
       renderCountdown();
     }
+    }
     updateClock();
   }, 1000);
+  AppState.activeIntervals.push(cntInt);
 
   // Simulate score updates every 15s
-  setInterval(() => {
+  const scoreInt = setInterval(() => {
     const balls = ['0', '1', '1', '2', '4', '1', '0', '6', '1', '2', 'W', '0', '1', '3'];
     const newBall = balls[Math.floor(Math.random() * balls.length)];
     AppState.matchData.currentBalls.push(newBall);
@@ -502,16 +510,18 @@ function startSimulation() {
     renderScoreTicker();
     renderMatchCard();
   }, 15000);
+  AppState.activeIntervals.push(scoreInt);
 
   // Simulate capacity changes every 20s
-  setInterval(() => {
+  const capInt = setInterval(() => {
     AppState.venueCapacity = Math.min(100, Math.max(60, AppState.venueCapacity + Math.floor((Math.random() - 0.45) * 4)));
     renderCapacityGauge();
     renderStats();
   }, 20000);
+  AppState.activeIntervals.push(capInt);
 
   // Simulate zone status changes every 30s
-  setInterval(() => {
+  const zoneInt = setInterval(() => {
     const statuses = ['clear', 'busy', 'avoid'];
     const descs = {
       clear: ['Clear — moving freely', 'Light traffic — 2 min', 'No congestion detected'],
@@ -527,9 +537,10 @@ function startSimulation() {
     AppState.zones[idx].desc = descs[newStatus][Math.floor(Math.random() * descs[newStatus].length)];
     renderZones();
   }, 30000);
+  AppState.activeIntervals.push(zoneInt);
 
   // Simulate new alerts every 45s
-  setInterval(() => {
+  const alertInt = setInterval(() => {
     const template = alertTemplates[Math.floor(Math.random() * alertTemplates.length)];
     const newAlert = {
       ...template,
@@ -541,6 +552,7 @@ function startSimulation() {
     if (AppState.alerts.length > 15) AppState.alerts.pop();
     renderAlerts();
   }, 45000);
+  AppState.activeIntervals.push(alertInt);
 }
 
 // --- Initialize ---
@@ -574,5 +586,57 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
-});
 
+  // Header Actions
+  const btnSearch = document.getElementById('btn-search');
+  if (btnSearch) {
+    btnSearch.addEventListener('click', () => {
+      if (typeof VenueIQ !== 'undefined') {
+        VenueIQ.toggleDrawer();
+      } else {
+        showToast('Assistant initializing...');
+      }
+    });
+  }
+
+  const btnNotif = document.getElementById('btn-notif');
+  if (btnNotif) {
+    btnNotif.addEventListener('click', () => {
+      if (typeof switchTab === 'function') {
+        switchTab('alerts');
+      }
+    });
+  }
+
+  // Bind new decoupled alert read button
+  const btnMarkRead = document.getElementById('btn-mark-alerts-read');
+  if (btnMarkRead) {
+    btnMarkRead.addEventListener('click', () => {
+      AppState.alerts.forEach(a => a.unread = false);
+      renderAlerts();
+      showToast('All alerts marked as read');
+    });
+  }
+
+  // Bind close modal
+  const btnCloseModal = document.getElementById('btn-close-modal');
+  if (btnCloseModal) {
+    btnCloseModal.addEventListener('click', closeModal);
+  }
+
+  // Bind generic section action buttons (Refresh, View All, Full Screen)
+  document.querySelectorAll('.section-action').forEach(btn => {
+    if (!btn.id) { // Avoid binding special ones like mark-alerts-read
+      btn.addEventListener('click', (e) => {
+        const text = e.target.textContent || '';
+        if (text.includes('Refresh')) {
+          renderZones();
+          showToast('Zone data refreshed');
+        } else {
+          showToast(`${text} feature coming soon!`);
+        }
+      });
+    }
+  });
+
+});
