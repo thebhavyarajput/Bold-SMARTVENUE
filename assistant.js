@@ -1,3 +1,12 @@
+/**
+ * @fileoverview VenueIQ — Smart Assistant Engine
+ * @description Context-aware AI assistant for SmartVenue. Handles real-time
+ * natural language processing, crowd navigation routing, food ordering intents,
+ * exit recommendations, weather alerts, and live Google Calendar integration.
+ * Fully modular — exposed on window.VenueIQ for cross-module access.
+ * @module assistant
+ * @version 2.0.0
+ */
 /* ============================================
    VenueIQ — Smart Assistant Engine
    Context-aware AI for SmartVenue

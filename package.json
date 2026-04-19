@@ -1,25 +1,39 @@
 {
   "name": "smartvenue-fan-app",
-  "version": "1.0.0",
-  "description": "SmartVenue — AI-powered stadium fan experience app with real-time crowd navigation, food ordering, and exit routing powered by Google Cloud.",
+  "version": "2.0.0",
+  "description": "SmartVenue — AI-powered stadium fan experience. Real-time crowd navigation, food ordering, exit routing, ride booking, and live match scores powered by Google Cloud & Firebase.",
   "main": "app.js",
-  "keywords": ["stadium", "fan-experience", "crowd-navigation", "smart-venue", "google-cloud", "firebase", "real-time"],
+  "keywords": [
+    "stadium", "fan-experience", "crowd-navigation", "smart-venue",
+    "google-cloud", "firebase", "firestore", "real-time", "cricket",
+    "accessibility", "ride-booking", "venuetechnology", "event-management",
+    "wankhede", "iot", "ai-assistant", "crowd-intelligence"
+  ],
   "author": "SmartVenue Team",
   "license": "MIT",
   "scripts": {
-    "test": "jest --testPathPattern=tests/ --verbose",
+    "test":  "jest --testPathPattern=tests/ --verbose --coverage",
     "start": "npx serve .",
-    "lint": "eslint app.js assistant.js --ext .js"
+    "lint":  "eslint app.js assistant.js ride-booking.js --ext .js",
+    "build": "echo 'SmartVenue is a static frontend app — no build step required.'"
   },
   "devDependencies": {
-    "jest": "^29.7.0",
+    "jest":   "^29.7.0",
     "eslint": "^8.56.0"
   },
   "jest": {
-    "testEnvironment": "node",
-    "testMatch": ["**/tests/**/*.spec.js"],
-    "collectCoverage": true,
+    "testEnvironment":   "node",
+    "testMatch":         ["**/tests/**/*.spec.js"],
+    "collectCoverage":   true,
     "coverageDirectory": "coverage",
-    "coverageReporters": ["text", "lcov"]
+    "coverageReporters": ["text", "lcov", "html"],
+    "coverageThreshold": {
+      "global": {
+        "branches":   60,
+        "functions":  70,
+        "lines":      70,
+        "statements": 70
+      }
+    }
   }
 }

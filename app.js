@@ -1,3 +1,11 @@
+/**
+ * @fileoverview SmartVenue — Core App Engine
+ * @description Manages application state (AppState), real-time simulation loops,
+ * UI rendering (match card, zone heatmap, menu, cart, alerts), tab navigation,
+ * and decoupled event delegation. Exposes AppState and escapeHTML on window.
+ * @module app
+ * @version 2.0.0
+ */
 /* ============================================
    SmartVenue App Engine
    Real-time data simulation & interactions
