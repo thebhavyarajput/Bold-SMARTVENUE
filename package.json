@@ -1,0 +1,25 @@
+{
+  "name": "smartvenue-fan-app",
+  "version": "1.0.0",
+  "description": "SmartVenue — AI-powered stadium fan experience app with real-time crowd navigation, food ordering, and exit routing powered by Google Cloud.",
+  "main": "app.js",
+  "keywords": ["stadium", "fan-experience", "crowd-navigation", "smart-venue", "google-cloud", "firebase", "real-time"],
+  "author": "SmartVenue Team",
+  "license": "MIT",
+  "scripts": {
+    "test": "jest --testPathPattern=tests/ --verbose",
+    "start": "npx serve .",
+    "lint": "eslint app.js assistant.js --ext .js"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "eslint": "^8.56.0"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testMatch": ["**/tests/**/*.spec.js"],
+    "collectCoverage": true,
+    "coverageDirectory": "coverage",
+    "coverageReporters": ["text", "lcov"]
+  }
+}

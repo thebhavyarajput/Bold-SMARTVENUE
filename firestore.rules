@@ -1,0 +1,18 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // SmartVenue Fan App — Firestore Security Rules
+    // Authenticated fans can read venue data; only server writes telemetry
+    match /venues/{venueId} {
+      allow read: if true;
+      allow write: if false;
+    }
+    match /crowd_telemetry/{docId} {
+      allow read: if true;
+      allow write: if false;
+    }
+    match /fan_orders/{orderId} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}
