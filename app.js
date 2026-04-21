@@ -596,28 +596,27 @@ function startSimulation() {
 }
 
 // --- Initialize ---
-document.addEventListener('DOMContentLoaded', () => {
-  initAlerts();
-  initTabs();
-  initMenuCategories();
-  initOrderToggle();
-  initAlertFilters();
+initAlerts();
+initTabs();
+initMenuCategories();
+initOrderToggle();
+initAlertFilters();
 
-  renderMatchCard();
-  renderScoreTicker();
-  renderStats();
-  renderZones();
-  renderCapacityGauge();
-  renderVenueMap();
-  renderMenu();
-  renderCart();
-  renderAlerts();
-  renderCountdown();
-  updateClock();
+renderMatchCard();
+renderScoreTicker();
+renderStats();
+renderZones();
+renderCapacityGauge();
+renderVenueMap();
+renderMenu();
+renderCart();
+renderAlerts();
+renderCountdown();
+updateClock();
 
-  startSimulation();
+startSimulation();
 
-  // VenueIQ overlay click-to-close
+// VenueIQ overlay click-to-close
   const viqOverlay = document.getElementById('venueiq-overlay');
   if (viqOverlay) {
     viqOverlay.addEventListener('click', () => {
@@ -706,8 +705,6 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
   });
-
-});
 
 /**
  * Enterprise Google Cloud Firestore Architecture
