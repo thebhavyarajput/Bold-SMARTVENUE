@@ -1,19 +1,16 @@
 {
-  "version": 1,
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "node": true
+  },
+  "extends": ["eslint:recommended"],
+  "parserOptions": {
+    "ecmaVersion": "latest"
+  },
   "rules": {
-    "env": {
-      "browser": true,
-      "es2021": true,
-      "node": true
-    },
-    "extends": ["eslint:recommended"],
-    "parserOptions": {
-      "ecmaVersion": "latest"
-    },
-    "rules": {
-      "no-console": "warn",
-      "no-unused-vars": "warn",
-      "strict": ["error", "global"]
-    }
+    "no-console": "warn",
+    "no-unused-vars": "warn",
+    "strict": ["error", "global"]
   }
 }
