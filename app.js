@@ -531,7 +531,6 @@ function startSimulation() {
       AppState.halftimeCountdown--;
       renderCountdown();
     }
-    }
     updateClock();
   }, 1000);
   AppState.activeIntervals.push(cntInt);
